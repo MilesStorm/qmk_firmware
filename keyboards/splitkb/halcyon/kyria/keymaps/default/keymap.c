@@ -235,7 +235,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 #define TAPPING_TERM_PER_KEY
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    int offset = 30;
+    int offset = 0;
     switch (keycode) {
         case LSFT_T(KC_F):
             return TAPPING_TERM_PER_KEY - offset;
