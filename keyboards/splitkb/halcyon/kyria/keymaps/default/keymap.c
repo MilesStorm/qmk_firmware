@@ -188,8 +188,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  */
      [_GAMING] = LAYOUT_split_3x6_5_hlc(
        KC_1,  KC_Q,    KC_2,    KC_3,    KC_4,    KC_X,                                        KC_6,    KC_7,    KC_8,    KC_I,    KC_O,   KC_ESC,
-       KC_TAB, KC_A,    KC_W,    KC_E,    KC_R,    KC_T,                                     KC_H, KC_J, KC_K, _______, _______, _______,
-       KC_AMPR,KC_C,    KC_S,    KC_D,    KC_F,    KC_G, KC_F1, KC_F1, _______, _______, _______, _______, _______, _______, _______, QWERTY,
+       KC_TAB, KC_A,    KC_W,    KC_E,    KC_R,    KC_T,                                       KC_H, KC_J, KC_K,    _______, _______, ADJUST,
+       KC_AMPR,KC_C,    KC_S,    KC_D,    KC_F,    KC_G, KC_F1, KC_F2, _______, _______, _______, _______, _______, _______, _______, QWERTY,
                         KC_Z, KC_LCTL, KC_LSFT,  KC_V, KC_SPC, _______, _______, _______, _______, _______,
        _______, _______, _______, _______, _______,                                                       _______, _______, _______, _______, _______
      ),
