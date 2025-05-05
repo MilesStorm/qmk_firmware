@@ -22,6 +22,8 @@
 #include "graphics/numbers/8.qgf.h"
 #include "graphics/numbers/9.qgf.h"
 #include "graphics/numbers/undef.qgf.h"
+#include "graphics/images/final.qgf.h"
+
 
 static const char *caps =        "Caps";
 static const char *num =         "Num";
@@ -30,6 +32,7 @@ static const char *scroll =      "Scroll";
 static painter_font_handle_t Retron27;
 static painter_font_handle_t Retron27_underline;
 static painter_image_handle_t layer_number;
+static painter_image_handle_t wizard_img;
 
 static uint8_t lcd_surface_fb[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(135, 240, 16)];
 
@@ -279,6 +282,25 @@ bool module_post_init_kb(void) {
     if(!module_post_init_user()) { return false; }
 
     return true;
+}
+
+bool display_module_housekeeping_task_user(bool second_display) {
+    static bool display_set = false;
+
+    if(second_display) {
+        if (!display_set && get_highest_layer(layer_state|default_layer_state) == 5 ) {
+            wizard_img = qp_load_image_mem(gfx_final);
+            qp_drawimage(lcd_surface, 0, 0, wizard_img);
+        }
+    }
+
+    if(!second_display) {
+        update_display();
+    }
+
+    qp_surface_draw(lcd_surface, lcd, 0, 0, 0);
+
+    return false;
 }
 
 // Called from halcyon.c

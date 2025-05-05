@@ -64,9 +64,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_QWERTY] = LAYOUT_split_3x6_5_hlc(
      KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                     KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P ,     KC_BSPC,
-     CTL_ESC , HOME_A, HOME_S ,  HOME_D  , HOME_F , KC_G ,                                     KC_H, HOME_J,  HOME_K ,  HOME_L, HOME_SCLN, CTL_QUOT,
+     CTL_ESC , KC_A, KC_S ,  KC_D  , KC_F , KC_G ,                                             KC_H,   KC_J,   KC_K ,   KC_L,   KC_SCLN,   CTL_QUOT,
      KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_LBRC,KC_CAPS,     FKEYS  , KC_RBRC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH,  KC_RSFT,
-                                ADJUST , KC_LGUI, ALT_ENT, KC_SPC , NAV   ,     SYM    , KC_ENT ,KC_RALT, KC_RGUI, KC_APP,
+                                ADJUST , KC_LGUI, KC_LALT, KC_SPC , NAV   ,     SYM    , KC_ENT ,KC_RALT, KC_RGUI, KC_APP,
      KC_MUTE, KC_NO,  KC_NO, KC_NO, KC_NO,                                                                KC_MUTE, KC_NO, KC_NO, KC_NO, KC_NO
     ),
 
@@ -173,7 +173,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  * Halcyon Layer template
 //  *
 //  * ,-------------------------------------------.                              ,-------------------------------------------.
-//  * |    1   |   Q  |   2  |  3   |  4   |  X   |                              |   6  |  7   |  8   |  9   |  0   |  BACK  |
+//  * |    Q   |   1  |   2  |  3   |  4   |  X   |                              |   6  |  7   |  8   |  9   |  0   |  BACK  |
 //  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
 //  * |   TAB  |   A  |   W  |   E  |  R   |  T   |                              |      |      |      |      |      |  ENT   |
 //  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
@@ -187,10 +187,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  * `-----------------------------------'                                              `-----------------------------------'
 //  */
      [_GAMING] = LAYOUT_split_3x6_5_hlc(
-       KC_1,  KC_Q,    KC_2,    KC_3,    KC_4,    KC_X,                                        KC_6,    KC_7,    KC_8,    KC_I,    KC_O,   KC_ESC,
+       KC_Q,  KC_1,    KC_2,    KC_3,    KC_4,    KC_X,                                        KC_6,    KC_7,    KC_8,    KC_I,    KC_O,   KC_ESC,
        KC_TAB, KC_A,    KC_W,    KC_E,    KC_R,    KC_T,                                       KC_H, KC_J, KC_K,    _______, _______, ADJUST,
-       KC_AMPR,KC_C,    KC_S,    KC_D,    KC_F,    KC_G, KC_F1, KC_F2, _______, _______, _______, _______, _______, _______, _______, QWERTY,
-                        KC_Z, KC_LCTL, KC_LSFT,  KC_V, KC_SPC, _______, _______, _______, _______, _______,
+       KC_AMPR,KC_C,    KC_S,    KC_D,    KC_F,    KC_G, KC_F1, KC_F2, _______, _______, _______, _______, _______, _______, _______, _______,
+                        KC_Z, KC_LCTL, KC_V,  KC_LSFT, KC_SPC, _______, _______, _______, _______, _______,
        _______, _______, _______, _______, _______,                                                       _______, _______, _______, _______, _______
      ),
 
