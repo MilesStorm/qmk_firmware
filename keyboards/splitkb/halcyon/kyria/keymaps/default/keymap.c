@@ -307,7 +307,11 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
             break;
         }
         case KYRA_CMD_SET_DEFAULT_LAYER:
-            default_layer_set((layer_state_t)1 << data[1]);
+            // set_single_default_layer() is the documented front-door API; takes a
+            // layer *number* (no manual mask) and does NOT write EEPROM, so the
+            // focus->layer feature can fire this rapidly without wearing flash.
+            // (default_layer_set is flagged "avoid unless you know what you're doing".)
+            set_single_default_layer(data[1]);
             break;
         case KYRA_CMD_OLED_TEXT:
             // TODO(milestone 2): forward slot/len/text to hlc_tft_display via
