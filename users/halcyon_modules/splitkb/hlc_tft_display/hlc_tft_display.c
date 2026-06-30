@@ -305,7 +305,7 @@ bool display_module_housekeeping_task_user(bool second_display) {
 
 // Called from halcyon.c
 bool display_module_housekeeping_task_kb(bool second_display) {
-    if(!display_module_housekeeping_task_user(second_display)) { return false; }
+    //if(!display_module_housekeeping_task_user(second_display)) { return false; }
 
     if(second_display) {
         static uint32_t last_draw = 0;

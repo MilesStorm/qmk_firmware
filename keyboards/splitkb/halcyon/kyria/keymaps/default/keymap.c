@@ -10,8 +10,8 @@ enum layers {
     _NAV,
     _SYM,
     _FUNCTION,
-    _ADJUST,
     _GAMING,
+    _ADJUST,
 };
 
 
@@ -115,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_SYM] = LAYOUT_split_3x6_5_hlc(
       KC_GRV ,   KC_1 ,   KC_2 ,   KC_3 ,   KC_4 ,   KC_5 ,                                       KC_6 ,   KC_7 ,   KC_8 ,   KC_9 ,   KC_0 , KC_EQL ,
      KC_TILD , KC_EXLM,  KC_AT , KC_HASH,  KC_DLR, KC_PERC,                                     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PLUS,
-     KC_PIPE , KC_BSLS, KC_COLN, KC_SCLN, KC_MINS, KC_LBRC, KC_LCBR, _______, _______, KC_RCBR, KC_RBRC, KC_UNDS, KC_COMM,  KC_DOT, KC_SLSH, KC_QUES,
+     S(KC_NUBS) , KC_BSLS, KC_COLN, KC_SCLN, KC_MINS, KC_LBRC, KC_LCBR, _______, _______, KC_RCBR, KC_RBRC, KC_UNDS, KC_COMM,  KC_DOT, KC_SLSH, KC_QUES,
                                  _______, KC_LGUI, _______, _______, _______, _______, _______, _______, _______, _______,
      _______, _______,  _______, _______, _______,                                                       _______, _______, _______, _______, _______
     ),
@@ -144,7 +144,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
      _______, _______,  _______, _______, _______,                                                       _______, _______, _______, _______, _______
     ),
-
+// /*
+//  * Halcyon Layer template
+//  *
+//  * ,-------------------------------------------.                              ,-------------------------------------------.
+//  * |    Q   |   1  |   2  |  3   |  4   |  X   |                              |   6  |  7   |  8   |  9   |  0   |  BACK  |
+//  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+//  * |   TAB  |   A  |   W  |   E  |  R   |  T   |                              |      |      |      |      |      |  ENT   |
+//  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+//  * |   AMP  |   C  |   S  |   D  |  F   |  G   |  F1  |  F2  |  |      |      |      |      |      |      |      |  LSFT  |
+//  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+//  *                        | ADJS | CTRL |   V  | SHFT | SPC  |  |      |      |      |      |      |
+//  *                        |      |      |      |      |      |  |      |      |      |      |      |
+//  *                        `----------------------------------'  `----------------------------------'
+//  * ,-----------------------------------.                                              ,-----------------------------------.
+//  * |      |      |       |      |      |                                              |      |      |       |      |      |
+//  * `-----------------------------------'                                              `-----------------------------------'
+//  */
+     [_GAMING] = LAYOUT_split_3x6_5_hlc(
+       KC_Q,  KC_1,    KC_2,    KC_3,    KC_4,    KC_X,                                        KC_6,    KC_7,    KC_8,    KC_I,    KC_O,   KC_ESC,
+       KC_TAB, KC_A,    KC_W,    KC_E,    KC_R,    KC_T,                                       KC_H, KC_J, KC_K,    _______, _______, _______,
+       UK_AMPR, KC_C,    KC_S,    KC_D,    KC_F,    KC_G, KC_F1, KC_F2, KC_B, _______, _______, _______, _______, _______, _______, _______,
+                        ADJUST, KC_LCTL, KC_V,  KC_LSFT, KC_SPC, KC_Z, _______, _______, _______, _______,
+       _______, _______, _______, _______, _______,                                                       _______, _______, _______, _______, _______
+     ),
 /*
  * Adjust Layer: Default layer settings, RGB
  *
@@ -169,31 +192,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  _______, _______, _______,_______, _______, _______, _______, _______, _______, _______,
      _______, _______,  _______, _______, _______,                                                      _______, _______, _______, _______, _______
     ),
-// /*
-//  * Halcyon Layer template
-//  *
-//  * ,-------------------------------------------.                              ,-------------------------------------------.
-//  * |    Q   |   1  |   2  |  3   |  4   |  X   |                              |   6  |  7   |  8   |  9   |  0   |  BACK  |
-//  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
-//  * |   TAB  |   A  |   W  |   E  |  R   |  T   |                              |      |      |      |      |      |  ENT   |
-//  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
-//  * |   AMP  |   C  |   S  |   D  |  F   |  G   |  F1  |  F2  |  |      |      |      |      |      |      |      |  LSFT  |
-//  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
-//  *                        |   Z  | CTRL | SHFT |   V  | SPC  |  |      |      |      |      |      |
-//  *                        |      |      |      |      |      |  |      |      |      |      |      |
-//  *                        `----------------------------------'  `----------------------------------'
-//  * ,-----------------------------------.                                              ,-----------------------------------.
-//  * |      |      |       |      |      |                                              |      |      |       |      |      |
-//  * `-----------------------------------'                                              `-----------------------------------'
-//  */
-     [_GAMING] = LAYOUT_split_3x6_5_hlc(
-       KC_Q,  KC_1,    KC_2,    KC_3,    KC_4,    KC_X,                                        KC_6,    KC_7,    KC_8,    KC_I,    KC_O,   KC_ESC,
-       KC_TAB, KC_A,    KC_W,    KC_E,    KC_R,    KC_T,                                       KC_H, KC_J, KC_K,    _______, _______, ADJUST,
-       KC_AMPR,KC_C,    KC_S,    KC_D,    KC_F,    KC_G, KC_F1, KC_F2, _______, _______, _______, _______, _______, _______, _______, _______,
-                        KC_Z, KC_LCTL, KC_V,  KC_LSFT, KC_SPC, _______, _______, _______, _______, _______,
-       _______, _______, _______, _______, _______,                                                       _______, _______, _______, _______, _______
-     ),
-
 // /*
 //  * Halcyon Layer template
 //  *
@@ -228,35 +226,9 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [2] = { ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______)  },
     [3] = { ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______)  },
     [4] = { ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______)  },
-    [5] = { ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(KC_VOLD, KC_VOLU),  ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
+    [5] = { ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______)  },
 };
 #endif
-
-#define TAPPING_TERM_PER_KEY
-
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    int offset = 0;
-    switch (keycode) {
-        case LSFT_T(KC_F):
-            return TAPPING_TERM_PER_KEY - offset;
-        case RSFT_T(KC_J):
-            return TAPPING_TERM_PER_KEY - offset;
-        case RGUI_T(KC_K):
-            return TAPPING_TERM_PER_KEY - offset;
-        case LGUI_T(KC_D):
-            return TAPPING_TERM_PER_KEY - offset;
-        case LALT_T(KC_S):
-            return TAPPING_TERM_PER_KEY - offset;
-        case RALT_T(KC_L):
-            return TAPPING_TERM_PER_KEY - offset;
-        case LCTL_T(KC_A):
-            return TAPPING_TERM_PER_KEY - offset;
-        case RCTL_T(KC_SCLN):
-            return TAPPING_TERM_PER_KEY - offset;
-        default:
-            return TAPPING_TERM;
-    }
-}
 
 // --- kyra-companion RAW HID integration --------------------------------------
 // Bidirectional channel with the desktop companion app. The message ids below
