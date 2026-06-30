@@ -257,3 +257,74 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
             return TAPPING_TERM;
     }
 }
+
+// --- kyra-companion RAW HID integration --------------------------------------
+// Bidirectional channel with the desktop companion app. The message ids below
+// MUST stay in sync with src/protocol.rs in the kyra-companion repo.
+#ifdef RAW_ENABLE
+#include "raw_hid.h"
+
+#define KYRA_PROTOCOL_VERSION 1
+#define KYRA_FW_MAJOR 0
+#define KYRA_FW_MINOR 1
+// RAW HID report size. Matches REPORT_SIZE in kyra-companion src/protocol.rs and
+// QMK's RAW_EPSIZE (which isn't visible from the keymap translation unit).
+#define KYRA_REPORT_SIZE 32
+
+enum kyra_cmd {
+    KYRA_CMD_PING              = 0x01, // host asks for state -> we reply PONG
+    KYRA_CMD_SET_DEFAULT_LAYER = 0x02, // data[1] = layer index
+    KYRA_CMD_OLED_TEXT         = 0x03, // data[1]=slot data[2]=len data[3..]=utf8
+};
+
+enum kyra_evt {
+    KYRA_EVT_PONG   = 0x81,
+    KYRA_EVT_LAYER  = 0x82,
+    KYRA_EVT_ACTION = 0x83,
+};
+
+// Report the current layer stack to the host. Pass the *incoming* state from
+// the layer hooks, since the globals aren't updated until after they return.
+static void kyra_send_layer_state(layer_state_t active, layer_state_t base) {
+    uint8_t buf[KYRA_REPORT_SIZE] = {0};
+    buf[0] = KYRA_EVT_LAYER;
+    buf[1] = get_highest_layer(active);
+    buf[2] = get_highest_layer(base);
+    raw_hid_send(buf, sizeof(buf));
+}
+
+void raw_hid_receive(uint8_t *data, uint8_t length) {
+    switch (data[0]) {
+        case KYRA_CMD_PING: {
+            uint8_t buf[KYRA_REPORT_SIZE] = {0};
+            buf[0] = KYRA_EVT_PONG;
+            buf[1] = KYRA_PROTOCOL_VERSION;
+            buf[2] = KYRA_FW_MAJOR;
+            buf[3] = KYRA_FW_MINOR;
+            buf[4] = get_highest_layer(layer_state);
+            buf[5] = get_highest_layer(default_layer_state);
+            raw_hid_send(buf, sizeof(buf));
+            break;
+        }
+        case KYRA_CMD_SET_DEFAULT_LAYER:
+            default_layer_set((layer_state_t)1 << data[1]);
+            break;
+        case KYRA_CMD_OLED_TEXT:
+            // TODO(milestone 2): forward slot/len/text to hlc_tft_display via
+            // Quantum Painter. See PLAN.md "OLED push" for the open question.
+            break;
+        default:
+            break;
+    }
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    kyra_send_layer_state(state, default_layer_state);
+    return state;
+}
+
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+    kyra_send_layer_state(layer_state, state);
+    return state;
+}
+#endif // RAW_ENABLE
