@@ -26,7 +26,16 @@
 
 static const char *caps =        "Caps";
 static const char *num =         "Num";
+#if defined(LEADER_ENABLE)
+// kyra-companion: Scroll Lock is repurposed as the OS Compose key, so its
+// indicator is meaningless. Show leader-mode state in that slot instead: lit
+// only while a leader sequence is active and waiting for input.
+#include "leader.h"
+static const char *leader_str =  "Leader";
+static bool last_leader_active = false;
+#else
 static const char *scroll =      "Scroll";
+#endif
 
 static painter_font_handle_t Retron27;
 static painter_font_handle_t Retron27_underline;
@@ -41,6 +50,11 @@ painter_device_t lcd_surface;
 
 led_t last_led_usb_state = {0};
 layer_state_t last_layer_state = {0};
+// kyra-companion: also track the default (base) layer. Switching QWERTY<->GAMING
+// via DF() changes default_layer_state, NOT layer_state, so the redraw guard
+// below must watch both or a fast base-layer toggle (whole Adjust hold+tap+
+// release inside one throttled frame) leaves the shown layer number stale.
+layer_state_t last_default_layer_state = {0};
 
 #define GRID_WIDTH 27
 #define GRID_HEIGHT 48
@@ -189,18 +203,30 @@ void update_display(void) {
         Retron27_underline = qp_load_font_mem(font_Retron2000_underline_27);
     }
 
-    if(last_led_usb_state.raw != host_keyboard_led_state().raw || first_run_led == false) {
+#if defined(LEADER_ENABLE)
+    bool leader_active = leader_sequence_active();
+#endif
+    if(last_led_usb_state.raw != host_keyboard_led_state().raw
+#if defined(LEADER_ENABLE)
+       || last_leader_active != leader_active
+#endif
+       || first_run_led == false) {
         led_t led_usb_state = host_keyboard_led_state();
 
         led_usb_state.caps_lock   ? qp_drawtext_recolor(lcd_surface, 5, LCD_HEIGHT - Retron27->line_height * 3 - 15, Retron27_underline, caps,   HSV_CAPS_ON,   HSV_BLACK) : qp_drawtext_recolor(lcd_surface, 5, LCD_HEIGHT - Retron27->line_height * 3 - 15, Retron27, caps,   HSV_CAPS_OFF,   HSV_BLACK);
         led_usb_state.num_lock    ? qp_drawtext_recolor(lcd_surface, 5, LCD_HEIGHT - Retron27->line_height * 2 - 10, Retron27_underline, num,    HSV_NUM_ON,    HSV_BLACK) : qp_drawtext_recolor(lcd_surface, 5, LCD_HEIGHT - Retron27->line_height * 2 - 10, Retron27, num,    HSV_NUM_OFF,    HSV_BLACK);
+#if defined(LEADER_ENABLE)
+        leader_active             ? qp_drawtext_recolor(lcd_surface, 5, LCD_HEIGHT - Retron27->line_height - 5,      Retron27_underline, leader_str, HSV_SCROLL_ON, HSV_BLACK) : qp_drawtext_recolor(lcd_surface, 5, LCD_HEIGHT - Retron27->line_height - 5,      Retron27, leader_str, HSV_SCROLL_OFF, HSV_BLACK);
+        last_leader_active = leader_active;
+#else
         led_usb_state.scroll_lock ? qp_drawtext_recolor(lcd_surface, 5, LCD_HEIGHT - Retron27->line_height - 5,      Retron27_underline, scroll, HSV_SCROLL_ON, HSV_BLACK) : qp_drawtext_recolor(lcd_surface, 5, LCD_HEIGHT - Retron27->line_height - 5,      Retron27, scroll, HSV_SCROLL_OFF, HSV_BLACK);
+#endif
 
         last_led_usb_state = led_usb_state;
         first_run_led = true;
     }
 
-    if(last_layer_state != layer_state || first_run_layer == false) {
+    if(last_layer_state != layer_state || last_default_layer_state != default_layer_state || first_run_layer == false) {
         switch (get_highest_layer(layer_state|default_layer_state)) {
         case 0:
             layer_number = qp_load_image_mem(gfx_0);
@@ -240,6 +266,7 @@ void update_display(void) {
         }
         qp_close_image(layer_number);
         last_layer_state = layer_state;
+        last_default_layer_state = default_layer_state;
         first_run_layer = true;
     }
 }

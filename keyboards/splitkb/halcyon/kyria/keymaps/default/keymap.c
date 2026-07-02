@@ -178,7 +178,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
  * |        |      |      |GAMING|      |      |      |      |  |      |      |      | SAD  | HUD  | VAD  | RMOD |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        |      |      |      |      |      |  |Leader|      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  * ,-----------------------------------.                                              ,-----------------------------------.
@@ -189,7 +189,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______ , _______, _______,                                    _______, _______, _______, _______, _______, _______,
       _______, _______, _______, QWERTY , _______, _______,                                    RM_TOGG, RM_SATU, RM_HUEU, RM_VALU, RM_NEXT, _______,
       _______, _______, _______, GAMING, _______, _______,_______, _______, _______, _______, _______, RM_SATD, RM_HUED, RM_VALD, RM_PREV, _______,
-                                 _______, _______, _______,_______, _______, _______, _______, _______, _______, _______,
+                                 _______, _______, _______,_______, _______, QK_LEAD, _______, _______, _______, _______,
      _______, _______,  _______, _______, _______,                                                      _______, _______, _______, _______, _______
     ),
 // /*
@@ -229,6 +229,50 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [5] = { ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______),  ENCODER_CCW_CW(_______, _______)  },
 };
 #endif
+
+// --- Danish characters (æ ø å) via leader key ---------------------------------
+// Leader is on the Adjust layer (Sym thumb key). Tap it, release, then type the
+// sequence on the base layer; hold Shift during the sequence for the capital.
+// Output goes through the OS compose key: the OS maps Scroll Lock to Compose
+// (hyprland kb_options = "compose:sclk") and the å/æ/ø rules are in the stock
+// en_US.UTF-8 Compose table, so no custom ~/.XCompose is needed.
+#ifdef LEADER_ENABLE
+static void send_compose_pair(uint16_t first, uint16_t second) {
+    // Compose must see the sequence without any held mods, except the shifts
+    // baked into `first`/`second` for capitals.
+    uint8_t mods = get_mods();
+    clear_mods();
+    send_keyboard_report();
+    tap_code(KC_SCRL); // Compose
+    tap_code16(first);
+    tap_code16(second);
+    set_mods(mods);
+    send_keyboard_report();
+}
+
+// Fire the sequence the instant a complete 2-key match lands, instead of waiting
+// for LEADER_TIMEOUT after the second key. All our sequences are exactly 2 keys,
+// so once the buffer matches one there's nothing more to wait for. Returning true
+// here makes leader.c call leader_end() immediately. (Runs on the 2nd key's
+// keydown, so Shift is still held -> caps detection stays reliable.)
+bool leader_add_user(uint16_t keycode) {
+    return leader_sequence_two_keys(KC_A, KC_A)
+        || leader_sequence_two_keys(KC_A, KC_E)
+        || leader_sequence_two_keys(KC_O, KC_O);
+}
+
+void leader_end_user(void) {
+    bool caps = get_mods() & MOD_MASK_SHIFT;
+    if (leader_sequence_two_keys(KC_A, KC_A)) {
+        send_compose_pair(caps ? S(KC_A) : KC_A, caps ? S(KC_A) : KC_A); // å Å
+    } else if (leader_sequence_two_keys(KC_A, KC_E)) {
+        send_compose_pair(caps ? S(KC_A) : KC_A, caps ? S(KC_E) : KC_E); // æ Æ
+    } else if (leader_sequence_two_keys(KC_O, KC_O)) {
+        // Compose rule is <o> </> — the slash is never shifted.
+        send_compose_pair(caps ? S(KC_O) : KC_O, KC_SLSH); // ø Ø
+    }
+}
+#endif // LEADER_ENABLE
 
 // --- kyra-companion RAW HID integration --------------------------------------
 // Bidirectional channel with the desktop companion app. The message ids below
