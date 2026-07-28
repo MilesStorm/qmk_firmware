@@ -7,37 +7,36 @@
 
 enum layers {
     _QWERTY = 0,
+    _GAMING,
     _NAV,
     _SYM,
     _FUNCTION,
-    _GAMING,
     _ADJUST,
 };
 
-
 // Aliases for readability
-#define QWERTY   DF(_QWERTY)
-#define GAMING   DF(_GAMING)
+#define QWERTY DF(_QWERTY)
+#define GAMING DF(_GAMING)
 
-#define SYM      MO(_SYM)
-#define NAV      MO(_NAV)
-#define FKEYS    MO(_FUNCTION)
-#define ADJUST   MO(_ADJUST)
+#define SYM MO(_SYM)
+#define NAV MO(_NAV)
+#define FKEYS MO(_FUNCTION)
+#define ADJUST MO(_ADJUST)
 
-#define CTL_ESC  MT(MOD_LCTL, KC_ESC)
+#define CTL_ESC MT(MOD_LCTL, KC_ESC)
 #define CTL_QUOT MT(MOD_RCTL, KC_QUOTE)
 #define CTL_MINS MT(MOD_RCTL, KC_MINUS)
-#define ALT_ENT  MT(MOD_LALT, KC_ENT)
+#define ALT_ENT MT(MOD_LALT, KC_ENT)
 
-#define HOME_A   MT(MOD_LCTL, KC_A)
-#define HOME_S   MT(MOD_LALT, KC_S)
-#define HOME_D   MT(MOD_LGUI, KC_D)
-#define HOME_F   MT(MOD_LSFT, KC_F)
+#define HOME_A MT(MOD_LCTL, KC_A)
+#define HOME_S MT(MOD_LALT, KC_S)
+#define HOME_D MT(MOD_LGUI, KC_D)
+#define HOME_F MT(MOD_LSFT, KC_F)
 
 #define HOME_SCLN MT(MOD_RCTL, KC_SCLN)
-#define HOME_L   MT(MOD_RALT, KC_L)
-#define HOME_K   MT(MOD_RGUI, KC_K)
-#define HOME_J   MT(MOD_RSFT, KC_J)
+#define HOME_L MT(MOD_RALT, KC_L)
+#define HOME_K MT(MOD_RGUI, KC_K)
+#define HOME_J MT(MOD_RSFT, KC_J)
 
 // Note: LAlt/Enter (ALT_ENT) is not the same thing as the keyboard shortcut Alt+Enter.
 // The notation `mod/tap` denotes a key that activates the modifier `mod` when held down, and
@@ -54,6 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |Ctrl/Esc|   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |Ctrl/' |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
  * | LShift |   Z  |   X  |   C  |   V  |   B  | [ {  |CapsLk|  |F-keys|  ] } |   N  |   M  | ,  < | . >  | /  ? | RShift |
+ * | / (    |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      | / )    |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |Adjust| LGUI | LAlt/| Space| Nav  |  | Sym  | Space| AltGr| RGUI | Menu |
  *                        |      |      | Enter|      |      |  |      |      |      |      |      |
@@ -65,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_split_3x6_5_hlc(
      KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                     KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P ,     KC_BSPC,
      CTL_ESC , KC_A, KC_S ,  KC_D  , KC_F , KC_G ,                                             KC_H,   KC_J,   KC_K ,   KC_L,   KC_SCLN,   CTL_QUOT,
-     KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_LBRC,KC_CAPS,     FKEYS  , KC_RBRC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH,  KC_RSFT,
+     SC_LSPO , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_LBRC,KC_CAPS,     FKEYS  , KC_RBRC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH,  SC_RSPC,
                                 ADJUST , KC_LGUI, KC_LALT, KC_SPC , NAV   ,     SYM    , KC_ENT ,KC_RALT, KC_RGUI, KC_APP,
      KC_MUTE, KC_NO,  KC_NO, KC_NO, KC_NO,                                                                KC_MUTE, KC_NO, KC_NO, KC_NO, KC_NO
     ),
@@ -164,7 +164,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      [_GAMING] = LAYOUT_split_3x6_5_hlc(
        KC_Q,  KC_1,    KC_2,    KC_3,    KC_4,    KC_X,                                        KC_6,    KC_7,    KC_8,    KC_I,    KC_O,   KC_ESC,
        KC_TAB, KC_A,    KC_W,    KC_E,    KC_R,    KC_T,                                       KC_H, KC_J, KC_K,    _______, _______, _______,
-       UK_AMPR, KC_C,    KC_S,    KC_D,    KC_F,    KC_G, KC_F1, KC_F2, KC_B, _______, _______, _______, _______, _______, _______, _______,
+       UK_AMPR, KC_C,    KC_S,    KC_D,    KC_F,    KC_G, KC_F1, KC_F2, FKEYS, KC_B, _______, _______, _______, _______, _______, _______,
                         ADJUST, KC_LCTL, KC_V,  KC_LSFT, KC_SPC, KC_Z, _______, _______, _______, _______,
        _______, _______, _______, _______, _______,                                                       _______, _______, _______, _______, _______
      ),
